@@ -1,3 +1,7 @@
+import axios from "axios";
+import classNames from "classnames";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import Layout from "../src/layouts/Layout";
 import Timeline from "../src/ui/Timeline";
 
@@ -52,6 +56,52 @@ const timelineItems = [
   }
 ];
 export default function Index() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [successfullySubmitted, setSuccessfullySubmitted] = useState(false);
+  const { handleSubmit, register, formState } = useForm({
+    mode: "onBlur",
+    defaultValues: {
+      Name: "",
+      Email: "",
+      Telefon: "",
+      Personen: 2,
+      Fleisch: 0,
+      Fisch: 0,
+      Vegetarisch: 0,
+      Vegan: 0,
+      RSVP: "Y",
+      Nachricht: "",
+      Sent: new Date().toISOString()
+    }
+  });
+
+  // useEffect(() => {
+  //   const { submissionId, submitted } = localStorage;
+  //   console.log("submissionId", submissionId);
+  //   console.log("submitted", submitted);
+  // }, []);
+
+  const onSubmit = async (data: any) => {
+    if (loading || error) {
+      return;
+    }
+    try {
+      setLoading(true);
+      const { data: responseData } = await axios.post(
+        "https://app.sheetlabs.com/BRIC/submissions",
+        [data],
+        { headers: { "Content-Type": "application/json" } }
+      );
+      setSuccessfullySubmitted(true);
+      console.log("returning", responseData);
+    } catch (err: any) {
+      console.log("err", err);
+      setError("Fehler beim Absenden des Formulars 🥲");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <Layout>
       <article
@@ -169,20 +219,278 @@ export default function Index() {
         id="rsvp"
         className="mx-auto max-w-7xl px-10 sm:px-40 py-40 -translate-y-80"
       >
-        <h2 className="text-2xl font-bold text-gray-800 sm:text-3xl lg:text-4xl text-center mb-20">
+        <h2 className="text-2xl font-bold text-gray-800 sm:text-3xl lg:text-4xl text-center mb-10">
           Rückmeldung
         </h2>
-        <p>
-          Wir freuen uns über eine Rückmeldung über das unten stehende Formular
-          bis zum <strong>1. März 2023</strong>!
-        </p>
-        <p>
-          Alternativ dürft ihr uns auch gerne telefonisch oder per E-Mail
-          kontaktieren.
-        </p>
-        <br />
-        <br />
-        <p className="text-center">Kommt in den nächsten Tagen!</p>
+        <div className="border-b border-gray-200 shadow-lg rounded-lg bg-white md:h-full overflow-hidden relative">
+          <form
+            onSubmit={handleSubmit(onSubmit, console.error)}
+            className={classNames(
+              "relative",
+              successfullySubmitted && "opacity-30 pointer-events-none"
+            )}
+          >
+            {/* <input type="hidden" {...register("__id")}></input> */}
+            <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
+              <div>
+                <h3 className="text-lg font-medium leading-6 text-gray-900">
+                  Wir freuen uns über eine Rückmeldung über das unten stehende
+                  Formular bis zum <strong>1. März 2023</strong>!
+                </h3>
+                <h3 className="text-lg font-medium leading-6 text-gray-900">
+                  Alternativ dürft ihr uns auch gerne telefonisch, per E-Mail
+                  oder WhatsApp kontaktieren.
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-12 gap-6">
+                {/* radio buttons */}
+                <div className="mt-4 space-y-4 flex justify-center col-span-12 mb-5">
+                  <div className="flex gap-10">
+                    <div className="flex items-center gap-1">
+                      <input
+                        {...register("RSVP")}
+                        id="RSVP_yes"
+                        type="radio"
+                        value="Y"
+                        className="h-4 w-4 border-gray-300 text-orange-600 focus:ring-indigo-500"
+                      />
+                      <label htmlFor="RSVP_yes" className="ml-3">
+                        <span className="block text-xl font-bold text-gray-700">
+                          Ich/Wir sagen zu
+                        </span>
+                      </label>
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      <input
+                        {...register("RSVP")}
+                        id="RSVP_no"
+                        type="radio"
+                        value="N"
+                        className="h-4 w-4 border-gray-300 text-orange-600 focus:ring-indigo-500"
+                      />
+                      <label htmlFor="RSVP_no" className="ml-3">
+                        <span className="block text-xl font-bold text-gray-700">
+                          Ich/Wir können leider nicht kommen
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 sm:col-span-6 relative">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Name(n)
+                  </label>
+                  {formState.errors.Name?.message && (
+                    <div className="absolute right-0 top-0 text-sm text-red-500">
+                      {formState.errors.Name?.message}
+                    </div>
+                  )}
+
+                  <input
+                    {...register("Name", { required: "Pflichtfeld" })}
+                    type="text"
+                    id="Name"
+                    className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+
+                <div className="col-span-12 sm:col-span-6 relative">
+                  <label
+                    htmlFor="Personen"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Anzahl Personen
+                  </label>
+                  {formState.errors.Personen?.message && (
+                    <div className="absolute right-0 top-0 text-sm text-red-500">
+                      {formState.errors.Personen?.message}
+                    </div>
+                  )}
+                  <input
+                    {...register("Personen", {
+                      required: "Pflichtfeld",
+                      valueAsNumber: true
+                    })}
+                    type="number"
+                    id="Personen"
+                    className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+
+                <div className="col-span-12 sm:col-span-6 relative">
+                  <label
+                    htmlFor="Email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Email
+                  </label>
+                  {formState.errors.Email?.message && (
+                    <div className="absolute right-0 top-0 text-sm text-red-500">
+                      {formState.errors.Email?.message}
+                    </div>
+                  )}
+                  <input
+                    {...register("Email", { required: "Pflichtfeld" })}
+                    type="text"
+                    id="Email"
+                    className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+
+                <div className="col-span-12 sm:col-span-6 relative">
+                  <label
+                    htmlFor="Telefon"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Telefon
+                  </label>
+                  {formState.errors.Telefon?.message && (
+                    <div className="absolute right-0 top-0 text-sm text-red-500">
+                      {formState.errors.Telefon?.message}
+                    </div>
+                  )}
+                  <input
+                    {...register("Telefon", { required: true })}
+                    type="text"
+                    id="Telefon"
+                    className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+
+                <div className="mt-6 -mb-2 col-span-12">
+                  <h3 className="text-lg font-medium leading-6 text-gray-900">
+                    Es wird einen riesen BBQ geben mit grosser Auswahl. Bitte
+                    gebt doch an, was ihr zum Essen mögt.
+                  </h3>
+                  <h3 className="text-lg font-bold leading-6 text-gray-900">
+                    Gerne auch mehrere Sachen pro Person!
+                  </h3>
+                </div>
+
+                <div className="col-span-6 sm:col-span-3">
+                  <label
+                    htmlFor="Fleisch"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Fleisch 🍗
+                  </label>
+                  <input
+                    {...register("Fleisch", { required: true })}
+                    type="number"
+                    id="Fleisch"
+                    className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+
+                <div className="col-span-6 sm:col-span-3">
+                  <label
+                    htmlFor="Fisch"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Fisch 🐟
+                  </label>
+                  <input
+                    {...register("Fisch", { required: true })}
+                    type="number"
+                    id="Fisch"
+                    className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+
+                <div className="col-span-6 sm:col-span-3">
+                  <label
+                    htmlFor="Vegetarisch"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Vegetarisch 🧀
+                  </label>
+                  <input
+                    {...register("Vegetarisch", { required: true })}
+                    type="number"
+                    id="Vegetarisch"
+                    className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+
+                <div className="col-span-6 sm:col-span-3">
+                  <label
+                    htmlFor="Vegan"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Vegan 🥕
+                  </label>
+                  <input
+                    {...register("Vegan", { required: true })}
+                    type="number"
+                    id="Vegan"
+                    className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+
+                <div className="col-span-12 sm:col-span-9">
+                  <label
+                    htmlFor="Nachricht"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Nachricht (optional)
+                  </label>
+                  <textarea
+                    {...register("Nachricht")}
+                    id="Nachricht"
+                    rows={5}
+                    placeholder="z.B. Allergien order Unverträglichkeiten"
+                    className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+            <div className="px-4 py-3 text-right sm:px-6">
+              <button
+                type="submit"
+                disabled={loading || !formState.isValid || !!error}
+                className={classNames(
+                  loading || !formState.isValid
+                    ? "opacity-50 pointer-events-none"
+                    : "",
+                  "w-full bg-orange-400 inline-flex justify-center rounded-md border border-transparent py-2 px-4 text-sm font-medium text-white shadow-sm cursor-pointer hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                )}
+              >
+                Abschicken
+              </button>
+              <div className="mt-2 text-sm text-gray-400 text-left">
+                Hinweis: Bei Änderungen gerne das Formular erneut abschicken.
+                Das zuletzt eingetroffene wird beachtet.
+              </div>
+            </div>
+          </form>
+          {successfullySubmitted && (
+            <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-80 z-10">
+              <div className="space-y-6 bg-white py-20 px-5 sm:p-6 text-center bg-orange-100 shadow-lg rounded-lg">
+                <h2 className="text-lg font-medium leading-6 text-gray-900">
+                  <p>Vielen lieben Dank für eure Rückmeldung 🥰</p>
+                  <br />
+                  Sie kam erfolgreich bei uns an.
+                </h2>
+              </div>
+            </div>
+          )}
+          {error && (
+            <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
+              <h2 className="text-lg font-bold leading-6 text-red-500">
+                Beim Abschicken gab es leider einen Fehler.
+                <br />
+                Informiere am besten gleich Simon über Whatsapp was da los ist.
+                🙈
+              </h2>
+            </div>
+          )}
+        </div>
       </article>
 
       <article
