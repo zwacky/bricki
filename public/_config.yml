@@ -1,2 +1,3 @@
 include:
   - _next
+  - **/_*.js
