@@ -35,7 +35,7 @@ export default function Layout({ children }: Props) {
             <h1 className="text-5xl uppercase font-bold pb-2 border-b border-white border-opacity-50 mb-2">
               Tobi & Simon
             </h1>
-            <div className="">24.06.2022</div>
+            <div className="">24.06.2023</div>
           </div>
         </div>
         <div className="absolute top-0 left-0 z-1 w-full h-full bg-gradient-to-t from-slate-900"></div>
