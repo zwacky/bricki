@@ -466,7 +466,7 @@ export default function Index() {
 
                 <div className="mt-6 -mb-2 col-span-12">
                   <h3 className="text-lg font-medium leading-6 text-gray-900">
-                    Es wird einen riesen BBQ geben mit grosser Auswahl. Bitte
+                    Es wird ein riesen BBQ geben mit grosser Auswahl. Bitte
                     gebt doch an, was ihr zum Essen mögt.
                   </h3>
                   <h3 className="text-lg font-bold leading-6 text-gray-900">
