@@ -45,7 +45,7 @@ export default function Layout({ children }: Props) {
       <nav className="sticky top-0 bg-slate-900 text-white shadow-sm z-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 flex justify-center">
           <ul className="flex flex-row items-center py-6 gap-6 md:gap-10 uppercase text-sm md:text-lg">
-            <li className="hover:text-slate-300">
+            <li className="hover:text-slate-300 text-center">
               <Link href="#tagesablauf">24. Juni 2023</Link>
             </li>
             <li className="hover:text-slate-300">

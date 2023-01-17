@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Layout from "../src/layouts/Layout";
 import Timeline from "../src/ui/Timeline";
+import { HeartIcon } from '@heroicons/react/24/outline';
 
 const timelineItems = [
   {
@@ -53,6 +54,78 @@ const timelineItems = [
     header: "Ende",
     text: "Die letzte Fähre fährt 04:00 Uhr.",
     icon: "😴"
+  }
+];
+
+const faqs = [
+  {
+    id: 1,
+    question: "Gibt es einen Dresscode?",
+    answer: "Kommt locker, festlich-sommerlich, helle Farben; Bohemian."
+  },
+  {
+    id: 2,
+    question: "Können wir unsere Kinder mitnehmen?",
+    answer:
+      "Bitte gebt uns Bescheid, ob ihr eure Kinder mitbringen möchtet.\n(Wie alt sind eure Kinder, damit wir mit der Location genügend und passende Sitzmöglichkeit planen können)"
+  },
+  {
+    id: 3,
+    question: "Gibt es besondere Wünsche für Geschenke?",
+    answer:
+      "Am meisten würden wir uns für einen Zuschuss für unsere Japan-Honeymoon Reise freuen."
+  },
+  {
+    id: 4,
+    question: "Sind Hunde erlaubt?",
+    answer:
+      "Wir lieben eure Vierbeiner, jedoch bitten wir euch eure Hunde an diesem Tag nicht auf die kleine Insel mitzunehmen."
+  },
+  {
+    id: 5,
+    question:
+      "Ich hätte eine Idee für eine Aktion auf der Hochzeit—an wen wende ich mich?",
+    answer:
+      "Um es optimal in den Tagesablauf einzuplanen wendet euch bitte an die Trauzeugen und klärt es mit ihnen ab."
+  }
+];
+
+const trauzeugen = [
+  {
+    name: "Christopher Hanuss",
+    phone: "+49 170 7604994",
+    mail: "",
+    imageUrl: "/trauzeugen/christopher.jpeg"
+  },
+  {
+    name: "Sandra Ohlwein",
+    phone: "+49 162 8080003",
+    mail: "",
+    imageUrl: "/trauzeugen/sandra.jpeg"
+  },
+  {
+    name: "Tanja Breu",
+    phone: "+49 170 2918292",
+    mail: "",
+    imageUrl: "/trauzeugen/tanja.jpeg"
+  },
+  {
+    name: "Jeremy DeWaal",
+    phone: "+49 176 52820325",
+    mail: "",
+    imageUrl: "/trauzeugen/jeremy.jpeg"
+  },
+  {
+    name: "Nicole Bataclan",
+    phone: "+49 172 3016871",
+    mail: "",
+    imageUrl: "/trauzeugen/nicole.jpeg"
+  },
+  {
+    name: "Philip Dubinsky",
+    phone: "+49 178 4444981",
+    mail: "",
+    imageUrl: "/trauzeugen/philip.jpeg"
   }
 ];
 export default function Index() {
@@ -207,12 +280,40 @@ export default function Index() {
 
       <article
         id="trauzeugen"
-        className="mx-auto max-w-7xl px-10 sm:px-40 py-40 -translate-y-80"
+        className="mx-auto max-w-7xl px-10 sm:px-10 py-40 -translate-y-80"
       >
         <h2 className="text-2xl font-bold text-gray-800 sm:text-3xl lg:text-4xl text-center mb-20">
-          Trauzeugen
+          Unsere Trauzeugen
         </h2>
-        <p className="text-center">Kommt in den nächsten Tagen!</p>
+
+        <div className="lg:col-span-2">
+          <ul
+            role="list"
+            className="sm:grid sm:grid-cols-2 gap-x-12 gap-y-8 sm:space-y-0 px-4"
+          >
+            {trauzeugen.map((person, index) => (
+              <li
+                key={person.name}
+                className={classNames(
+                  index % 2 === 0 && "text-right flex-row-reverse -mr-8 z-10",
+                  "flex items-center gap-8 -ml-8 mb-8 sm:mb-0"
+                )}
+              >
+                <img
+                  className="h-32 w-32 sm:h-40 sm:w-40 rounded-full"
+                  src={person.imageUrl}
+                  alt={person.name}
+                  loading="lazy"
+                />
+                <div className="font-medium">
+                  <h3 className="text-xl">{person.name}</h3>
+                  <p className="text-orange-600">{person.phone}</p>
+                  <p className="text-indigo-600">{person.mail}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       </article>
 
       <article
@@ -222,7 +323,7 @@ export default function Index() {
         <h2 className="text-2xl font-bold text-gray-800 sm:text-3xl lg:text-4xl text-center mb-10">
           Rückmeldung
         </h2>
-        <div className="border-b border-gray-200 shadow-lg rounded-lg bg-white md:h-full overflow-hidden relative">
+        <div className="border-b border-gray-200 bg-gray-50 shadow-lg rounded-lg md:h-full overflow-hidden relative">
           <form
             onSubmit={handleSubmit(onSubmit, console.error)}
             className={classNames(
@@ -231,7 +332,7 @@ export default function Index() {
             )}
           >
             {/* <input type="hidden" {...register("__id")}></input> */}
-            <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
+            <div className="space-y-6 py-6 px-4 sm:p-6">
               <div>
                 <h3 className="text-lg font-medium leading-6 text-gray-900">
                   Wir freuen uns über eine Rückmeldung über das unten stehende
@@ -249,7 +350,7 @@ export default function Index() {
                   <div className="flex gap-10">
                     <div className="flex items-center gap-1">
                       <input
-                        {...register("RSVP")}
+                        {...register("RSVP", { required: "Pflichtfeld" })}
                         id="RSVP_yes"
                         type="radio"
                         value="Y"
@@ -264,7 +365,7 @@ export default function Index() {
 
                     <div className="flex items-center gap-1">
                       <input
-                        {...register("RSVP")}
+                        {...register("RSVP", { required: "Pflichtfeld" })}
                         id="RSVP_no"
                         type="radio"
                         value="N"
@@ -497,11 +598,32 @@ export default function Index() {
         id="faq"
         className="mx-auto max-w-7xl px-10 sm:px-40 py-40 -translate-y-80"
       >
-        <h2 className="text-2xl font-bold text-gray-800 sm:text-3xl lg:text-4xl text-center mb-20">
+        <h2 className="text-2xl font-bold text-gray-800 sm:text-3xl lg:text-4xl text-center mb-10">
           Fragen & Antworten
         </h2>
-        <p className="text-center">Kommt in den nächsten Tagen!</p>
+        <div className="">
+          <div className="mx-auto max-w-7xl divide-y divide-gray-200 pt-0 lg:pt-4 py-12 px0 lg:py-16 lg:px-8">
+            <div className="mt-8">
+              <dl className="divide-y divide-gray-200">
+                {faqs.map((faq) => (
+                  <div
+                    key={faq.id}
+                    className="pt-6 pb-8 md:grid md:grid-cols-12 md:gap-8"
+                  >
+                    <dt className="text-base font-medium text-gray-900 md:col-span-5">
+                      {faq.question}
+                    </dt>
+                    <dd className="mt-2 md:col-span-7 md:mt-0">
+                      <p className="text-base text-gray-500">{faq.answer}</p>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </div>
+        </div>
       </article>
+      <div className="mx-auto max-w-7xl -translate-y-80 flex justify-center"><HeartIcon className="h-8 w-8 stroke-1" /></div>
     </Layout>
   );
 }
