@@ -95,37 +95,37 @@ const trauzeugen = [
     name: "Christopher Hanuss",
     phone: "+49 170 7604994",
     mail: "",
-    imageUrl: "/trauzeugen/christopher.jpeg"
+    imageUrl: "/bricki/trauzeugen/christopher.jpeg"
   },
   {
     name: "Sandra Ohlwein",
     phone: "+49 162 8080003",
     mail: "",
-    imageUrl: "/trauzeugen/sandra.jpeg"
+    imageUrl: "/bricki/trauzeugen/sandra.jpeg"
   },
   {
     name: "Tanja Breu",
     phone: "+49 170 2918292",
     mail: "",
-    imageUrl: "/trauzeugen/tanja.jpeg"
+    imageUrl: "/bricki/trauzeugen/tanja.jpeg"
   },
   {
     name: "Jeremy DeWaal",
     phone: "+49 176 52820325",
     mail: "",
-    imageUrl: "/trauzeugen/jeremy.jpeg"
+    imageUrl: "/bricki/trauzeugen/jeremy.jpeg"
   },
   {
     name: "Nicole Bataclan",
     phone: "+49 172 3016871",
     mail: "",
-    imageUrl: "/trauzeugen/nicole.jpeg"
+    imageUrl: "/bricki/trauzeugen/nicole.jpeg"
   },
   {
     name: "Philip Dubinsky",
     phone: "+49 178 4444981",
     mail: "",
-    imageUrl: "/trauzeugen/philip.jpeg"
+    imageUrl: "/bricki/trauzeugen/philip.jpeg"
   }
 ];
 export default function Index() {
